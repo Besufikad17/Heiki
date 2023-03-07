@@ -2,6 +2,19 @@
   import Header from "./lib/Header.svelte";
   import Footer from "./lib/Footer.svelte";
   import Card from "./lib/Card.svelte";
+  import Browse from "./lib/Browse.svelte";
+  import Modal from "svelte-simple-modal";
+  import { writable } from "svelte/store";
+  import { currentWeapon } from "./lib/store";
+  
+  const modal = writable(null);
+  const showBrowser = (e, weapon) => {
+    e.preventDefault();
+    console.log("clicked");
+    currentWeapon.set(weapon) 
+    modal.set(Browse) 
+  };
+
 
   const default_imgs = [
     "Classic",
@@ -21,6 +34,7 @@
     "Vandal",
     "Odin"
   ];
+
 </script>
 <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
 
@@ -29,12 +43,20 @@
   <div class="container">
     <div class="row">
       {#each default_imgs as pic}
-        <Card img="src/assets/{pic}.webp" name={pic} />
+        <Modal show={$modal}>
+            <Card img="src/assets/{pic}.webp" name={pic} on:click={e => showBrowser(e, pic)} />
+        </Modal>
       {/each}
-      <Card img="src/assets/Sheriff.webp" name="Sheriff" />
+      
+      <Modal show={$modal}>
+        <Card img="src/assets/Sheriff.webp" name="Sheriff" on:click={e => showBrowser(e, "Sheriff")} />
+      </Modal>
       <div />
       <div />
-      <Card img="src/assets/TacticalKnife.webp" name="Knife" />
+      <Modal show={$modal}>    
+        <Card img="src/assets/TacticalKnife.webp" name="Knife" on:click={e => showBrowser(e, "Knife")} />
+      </Modal>
+
     </div>
     <br />
   </div>
